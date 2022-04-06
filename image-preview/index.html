@@ -7,21 +7,20 @@
     window.Stimulus = Application.start()
 
     Stimulus.register("image-form", class extends Controller {
-      static targets = ['imageUploader', 'imagePreview', 'clearUpload']
+      static targets = ['imageUploader', 'previewSection', 'imagePreview', 'clearUpload']
 
       connect() {
         this.updatePreview()
       }
       updatePreview() {
-        this.imageUploaderTarget.files.length ? this.showPreview() : this.clearPreview() 
+        this.imageUploaderTarget.files.length ? this.showPreview() : this.hidePreview() 
       }
       showPreview() {
         this.imagePreviewTarget.src = URL.createObjectURL(this.imageUploaderTarget.files[0])
-        this.clearUploadTarget.classList.remove('d-none')
+        this.previewSectionTarget.classList.remove('d-none')
       }
-      clearPreview() {
-        this.imagePreviewTarget.src = './src/image-preview.svg'
-        this.clearUploadTarget.classList.add('d-none')
+      hidePreview() {
+        this.previewSectionTarget.classList.add('d-none')
       }
       clearUpload() {
         this.imageUploaderTarget.value = null
@@ -30,14 +29,16 @@
     })
   </script>
   <style>
-    img.preview {
+    .preview-section {
+      margin-top: 12px;
+    }
+    .preview-section img {
       display: block;
       height: 100px;
       width: 100px;
-      margin-top: 12px;
       object-fit: cover;
     }
-    button.crear {
+    button.clear {
       margin-top: 4px;
     }
     .d-none {
@@ -51,15 +52,17 @@
       data-image-form-target="imageUploader"
       data-action="image-form#updatePreview"
     >
-    <img class="preview"
-      src="./src/image-preview.svg"
-      data-image-form-target="imagePreview"
-    >
-    <button class="crear d-none"
-      data-image-form-target="clearUpload"
-      data-action="image-form#clearUpload">
-      Clear
-    </button>
+    <div class="preview-section d-none" data-image-form-target="previewSection">
+      <img
+        src="./src/image-preview.svg"
+        data-image-form-target="imagePreview"
+      >
+      <button class="clear"
+        data-image-form-target="clearUpload"
+        data-action="image-form#clearUpload">
+        Clear
+      </button>
+    </div>
   </div>
 </body>
 </html>
