@@ -9,7 +9,7 @@
     Stimulus.register("auto-height", class extends Controller {
       changeHeight(event) {
         event.target.style.height = "auto";
-        event.target.style.height = (event.target.scrollHeight) + "px";
+        event.target.style.height = event.target.scrollHeight + "px";
       }
     })
   </script>
