@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>Form validation</title>
+  <script type="module">
+    import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
+    window.Stimulus = Application.start()
+
+    Stimulus.register("validation", class extends Controller {
+      static targets = ['present', 'minNumber']
+
+      connect() {
+        this.presentTargets.forEach(target => { 
+          target.addEventListener('input', _ => target.classList.remove('validation-error'))
+        })
+        this.minNumberTargets.forEach(target => { 
+          target.addEventListener('input', _ => target.classList.remove('validation-error'))
+        })
+      }
+      validateForm(event) {
+        this.validatePresentTargets(event)
+        this.validateMinNumberTargets(event)
+      }
+      validatePresentTargets(event) {
+        this.presentTargets.forEach(target => {
+          if (!target.value) {
+            event.preventDefault();
+            target.classList.add('validation-error')
+          }
+        })
+      }
+      validateMinNumberTargets(event) {
+        this.minNumberTargets.forEach(target => {
+          if (target.value < target.getAttribute('data-min-number')) {
+            event.preventDefault();
+            target.classList.add('validation-error')
+          }
+        })
+      }
+    })
+  </script>
+  <style>
+    input.validation-error {
+      border-color: red;
+    }
+  </style>
+</head>
+<body>
+  <form data-controller="validation" action="/users">
+    <input autocomplete="off" type="text" placeholder="name" data-validation-target="present">
+    <input autocomplete="off" type="text" placeholder="surname" data-validation-target="present">
+    <input autocomplete="off" type="number" placeholder="age" data-validation-target="minNumber" data-min-number="18">
+    <input type="submit" data-action="validation#validateForm">
+  </form>
+</body>
+</html>

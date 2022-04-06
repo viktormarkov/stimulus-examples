@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>Textarea auto height</title>
+  <script type="module">
+    import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
+    window.Stimulus = Application.start()
+
+    Stimulus.register("auto-height", class extends Controller {
+      changeHeight(event) {
+        event.target.style.height = "auto";
+        event.target.style.height = (event.target.scrollHeight) + "px";
+      }
+    })
+  </script>
+</head>
+<body>
+  <textarea style="height:35px;"
+    data-controller="auto-height" 
+    data-action="auto-height#changeHeight"
+  ></textarea>
+</body>
+</html>

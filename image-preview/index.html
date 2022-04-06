@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>Image preview</title>
+  <script type="module">
+    import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
+    window.Stimulus = Application.start()
+
+    Stimulus.register("image-form", class extends Controller {
+      static targets = ['imageUploader', 'imagePreview', 'clearUpload']
+
+      connect() {
+        this.updatePreview()
+      }
+      updatePreview() {
+        console.log('update', this.imageUploaderTarget.files)
+        this.imageUploaderTarget.files.length ? this.showPreview() : this.clearPreview() 
+      }
+      showPreview() {
+        this.imagePreviewTarget.src = URL.createObjectURL(this.imageUploaderTarget.files[0])
+        this.clearUploadTarget.classList.remove('d-none')
+      }
+      clearPreview() {
+        this.imagePreviewTarget.src = './src/image-preview.svg'
+        this.clearUploadTarget.classList.add('d-none')
+      }
+      clearUpload() {
+        this.imageUploaderTarget.value = null
+        this.updatePreview()
+      }
+    })
+  </script>
+  <style>
+    img.preview {
+      display: block;
+      height: 100px;
+      width: 100px;
+      margin-top: 12px;
+      object-fit: cover;
+    }
+    button.crear {
+      margin-top: 4px;
+    }
+    .d-none {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div data-controller="image-form">
+    <input type="file" accept="image/*" 
+      data-image-form-target="imageUploader"
+      data-action="image-form#updatePreview"
+    >
+    <img class="preview"
+      src="./src/image-preview.svg"
+      data-image-form-target="imagePreview"
+    >
+    <button class="crear d-none"
+      data-image-form-target="clearUpload"
+      data-action="image-form#clearUpload">
+      Clear
+    </button>
+  </div>
+</body>
+</html>
