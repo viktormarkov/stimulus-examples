@@ -24,18 +24,21 @@
       validatePresentTargets(event) {
         this.presentTargets.forEach(target => {
           if (!target.value) {
-            event.preventDefault();
-            target.classList.add('validation-error')
+            this.addValidationError(event, target)
           }
         })
       }
       validateMinNumberTargets(event) {
         this.minNumberTargets.forEach(target => {
-          if (target.value < target.getAttribute('data-min-number')) {
-            event.preventDefault();
-            target.classList.add('validation-error')
+          const userInput = parseInt(target.value) || 0
+          if (userInput < parseInt(target.getAttribute('data-min-number'))) {
+            this.addValidationError(event, target)
           }
         })
+      }
+      addValidationError(event, target) {
+        event.preventDefault();
+        target.classList.add('validation-error')
       }
     })
   </script>
@@ -46,7 +49,7 @@
   </style>
 </head>
 <body>
-  <form data-controller="validation" action="/users">
+  <form data-controller="validation" action="/">
     <input autocomplete="off" type="text" placeholder="name" data-validation-target="present">
     <input autocomplete="off" type="text" placeholder="surname" data-validation-target="present">
     <input autocomplete="off" type="number" placeholder="age" data-validation-target="minNumber" data-min-number="18">
